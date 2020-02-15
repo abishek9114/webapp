@@ -9,4 +9,10 @@ node(){
     sh "${mvnHome}/bin/mvn clean package"
   }
   
+  stage('Send Over Ansible'){
+    sshPublisher(publishers: [sshPublisherDesc(configName: 'ansibleserver', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''ansible-playbook -i /opt/docker/ansible-host /opt/docker/devops.yml;
+      ansible-playbook -i /opt/docker/ansible-host /opt/docker/push-devops.yml;''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '//opt/docker/', remoteDirectorySDF: false, removePrefix: 'webapp/target', sourceFiles: 'webapp/target/*.war')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+  
+  }
+  
 }
